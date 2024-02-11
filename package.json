@@ -1,0 +1,35 @@
+{
+  "devDependencies": {
+    "@types/jest": "^28.1.2",
+    "@types/supertest": "^2.0.12",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.7.1",
+    "supertest": "^6.2.3",
+    "ts-jest": "^28.0.5",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.7.3"
+  },
+  "version": "1.0.0",
+  "description": "CRUD-API",
+  "name": "crud-api",
+  "scripts": {
+    "start:dev": "nodemon ./src/server.ts",
+    "start:prod": "tsc && node ./dist/src/server.js",
+    "start:multi": "nodemon ./src/multi.ts",
+    "test": "jest"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "jest": "^28.1.1",
+    "ts-node": "^10.8.1",
+    "uuid": "^8.3.2"
+  }
+}
