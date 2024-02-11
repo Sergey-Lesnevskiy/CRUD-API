@@ -25,22 +25,27 @@ export class Controller {
   async updateUserById(user: IUser): Promise<IUser | undefined> {
     return new Promise((resolve) => {
       const userIndex = users.findIndex((userInDatabase) => user.id === userInDatabase.id);
-      if (userIndex === -1) {
-        resolve(undefined);
+      users[userIndex] = user;
+      resolve(user);
+    });
+  }
+  async deleteUserById(index: number): Promise<string> {
+    return new Promise((resolve) => {
+      if (index === -1) {
+        resolve('No user to delete');
       } else {
-        users[userIndex] = user;
-        resolve(users[userIndex]);
+        users.splice(index, 1);
+        resolve('User deleted successfully!');
       }
     });
   }
-  async deleteUserById(id: string): Promise<IUser | string> {
+  async getUserIndex(id: string): Promise<number> {
     return new Promise((resolve) => {
       const userIndex = users.findIndex((userInDatabase) => id === userInDatabase.id);
       if (userIndex === -1) {
-        resolve(`No user with id ${id} found`);
+        resolve(-1);
       } else {
-        users.splice(userIndex, 1);
-        resolve('User deleted successfully');
+        resolve(userIndex);
       }
     });
   }
