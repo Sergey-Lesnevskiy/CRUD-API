@@ -1,9 +1,11 @@
+import 'dotenv/config';
+import http from 'http';
 import { Controller as Users } from './controller/controller';
-import { getReqData, uuidValidate } from './utils/utils';
+import { getReqData, isUserHasProperties, uuidValidate } from './utils/utils';
 import { IncomingMessage, ServerResponse } from 'http';
 const SERVER_PORT = process.env.PORT;
 
-const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
+export const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
   if (req.url === '/api/users' && req.method === 'GET') {
     try {
       const users = await new Users().getUsers();
@@ -18,12 +20,20 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
   } else if (req.url === '/api/users' && req.method === 'POST') {
     try {
       const usersData = await getReqData(req, res);
-      if (!usersData.hobbies || !usersData.age || !usersData.username) {
+      const userHasProperties = isUserHasProperties(usersData);
+      if (!usersData.hobbies || !usersData.age || !usersData.username || !userHasProperties) {
         res.setHeader('Process-id', process.pid);
         res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'Request body does not contain required fields' }));
+        res.end(
+          JSON.stringify({ message: 'Request body does not contain required fields or wrong data type for fields' })
+        );
       } else {
-        const user = await new Users().addUser(usersData);
+        const newUser = {
+          username: usersData.username,
+          age: usersData.age,
+          hobbies: usersData.hobbies,
+        };
+        const user = await new Users().addUser(newUser);
         res.setHeader('Process-id', process.pid);
         res.writeHead(201, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(user));
@@ -62,6 +72,7 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
       const usersData = await getReqData(req, res);
       const userById = await new Users().getUserById(id);
       const validationResult = uuidValidate(id);
+      const userHasProperties = isUserHasProperties(usersData);
       if (!validationResult) {
         res.setHeader('Process-id', process.pid);
         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -71,10 +82,12 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'User was not found' }));
       } else {
-        if (!usersData.hobbies || !usersData.age || !usersData.username) {
+        if (!usersData.hobbies || !usersData.age || !usersData.username || !userHasProperties) {
           res.setHeader('Process-id', process.pid);
           res.writeHead(400, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ message: 'Request body does not contain required fields' }));
+          res.end(
+            JSON.stringify({ message: 'Request body does not contain required fields or wrong data type for fields' })
+          );
         } else {
           const newUser = {
             id: id,
@@ -125,6 +138,7 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
     res.end(JSON.stringify({ message: 'Route was not found' }));
   }
 });
+
 server.listen(SERVER_PORT || 5000, () => {
   console.log(`Server started on port: ${SERVER_PORT}`);
 });

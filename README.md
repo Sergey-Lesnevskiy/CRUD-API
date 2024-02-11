@@ -3,7 +3,7 @@
 ## Instruction:
 1. Clone repo:
  ``` powershell 
-git@github.com:Sergey-Lesnevskiy/CRUD-API.git -b dev 
+https://github.com/Sergey-Lesnevskiy/CRUD-API
 ```
 2. To install all dependencies use npm install in the root folder (CRUD-API)
 ``` powershell 
