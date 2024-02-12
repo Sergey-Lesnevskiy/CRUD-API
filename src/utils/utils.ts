@@ -1,7 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { IUser } from '../interfaces/interfaces';
-import { version } from 'uuid';
-import { validate } from 'uuid';
+import { version, validate } from 'uuid';
 
 export const uuidValidate = (id: string): boolean => {
   return validate(id) && version(id) === 4;
@@ -44,7 +43,7 @@ export const isUserHasProperties = (usersData: any) => {
   ) {
     return false;
   }
-  if (usersData.hobbies.length === 0) return false;
+  if (usersData.hobbies.length === 0) return true;
   const arrayValidation = checkArrayForStrings(usersData.hobbies);
   if (!arrayValidation) return false;
   return true;
